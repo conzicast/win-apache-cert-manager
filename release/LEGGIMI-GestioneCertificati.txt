@@ -1,4 +1,4 @@
-GESTIONE CERTIFICATI APACHE - VERSIONE 2.0.1
+GESTIONE CERTIFICATI APACHE - VERSIONE 2.0.2
 ============================================
 
 COMPATIBILITA
@@ -24,12 +24,30 @@ CAMPI DELLA FINESTRA
 6. Percorso di le64.exe.
 7. Percorso di httpd-vhosts.conf.
 
+RUOLO CENTRALE DI SSL-LE64
+-------------------------
+
+le64.exe e il client ACME che comunica con Let's Encrypt. E il componente
+centrale usato per emettere e rinnovare i certificati; l'applicazione ne
+coordina l'esecuzione insieme ad Apache e OpenSSL.
+
+Dopo aver attivato il VirtualHost HTTP, l'app esegue il le64.exe selezionato
+passandogli domini, cartella .well-known\acme-challenge e percorsi dei file
+ACME. le64.exe crea la challenge HTTP-01 sulla porta 80, richiede la verifica
+a Let's Encrypt e salva certificato e chiave di lavoro.
+
+le64.exe non e incluso: deve essere gia presente sul server. Il percorso
+proposto e C:\server\ssl-le64\le64.exe, ma puo essere cambiato. Nella cartella
+di le64.exe vengono salvati anche i log gestione_*.log e comandi_*.log. Il log
+dei comandi mostra la riga completa di le64.exe realmente eseguita.
+
 FLUSSO
 ------
 
 L'app aggiunge prima il VirtualHost HTTP sulla porta 80 e riavvia l'Apache
-selezionato. Poi esegue la challenge HTTP-01, verifica il certificato, installa
-certificato e chiave, aggiunge il VirtualHost HTTPS e riavvia nuovamente Apache.
+selezionato. Poi avvia le64.exe per la challenge HTTP-01 e la richiesta a
+Let's Encrypt, verifica il certificato, installa certificato e chiave, aggiunge
+il VirtualHost HTTPS e riavvia nuovamente Apache.
 
 Prima di modificare i file crea un backup. In caso di errore ripristina
 VirtualHost, certificato e chiave precedenti.
@@ -44,6 +62,10 @@ GestioneCertificati.profiles.xml
 
 Questo file contiene esclusivamente percorsi tecnici e domini, non password.
 Serve al batch per ricordare le scelte effettuate per ciascun sito.
+
+AggiornaCertificati.bat richiama GestioneCertificati.exe in modalita rinnovo;
+l'eseguibile usa per ogni profilo il percorso di le64.exe salvato nel file XML.
+Il rinnovo viene richiesto quando mancano 20 giorni o meno alla scadenza.
 
 Pianificare AggiornaCertificati.bat ogni giorno tramite Utilita di
 pianificazione, selezionando "Esegui con i privilegi piu elevati".

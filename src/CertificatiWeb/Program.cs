@@ -17,15 +17,15 @@ using System.Xml.Linq;
 [assembly: AssemblyDescription("Configurazione e rinnovo certificati HTTPS per Apache")]
 [assembly: AssemblyCompany("2LAB")]
 [assembly: AssemblyProduct("Gestione Certificati Apache")]
-[assembly: AssemblyVersion("2.0.1.0")]
-[assembly: AssemblyFileVersion("2.0.1.0")]
-[assembly: AssemblyInformationalVersion("2.0.1")]
+[assembly: AssemblyVersion("2.0.2.0")]
+[assembly: AssemblyFileVersion("2.0.2.0")]
+[assembly: AssemblyInformationalVersion("2.0.2")]
 
 namespace CertificatiWeb
 {
     internal static class AppInfo
     {
-        public const string Version = "2.0.1";
+        public const string Version = "2.0.2";
     }
 
     internal static class Program

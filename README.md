@@ -1,6 +1,6 @@
 # Win Apache Certificate Manager
 
-Versione corrente: **2.0.1**
+Versione corrente: **2.0.2**
 
 Applicazione Windows x64 con interfaccia grafica per creare e rinnovare certificati HTTPS su installazioni Apache configurabili.
 
@@ -26,13 +26,28 @@ La verifica dei domini SAN viene eseguita direttamente tramite .NET, senza richi
 
 Il primo dominio diventa `ServerName`. Gli altri diventano `ServerAlias` e vengono richiesti come nomi SAN nello stesso certificato.
 
+## Ruolo centrale di ssl-le64
+
+`le64.exe` è il client ACME che comunica con Let's Encrypt ed è il componente centrale per l'emissione e il rinnovo dei certificati. L'applicazione non sostituisce `le64.exe`: ne coordina l'esecuzione insieme ad Apache e OpenSSL.
+
+Durante la prima configurazione l'applicazione:
+
+1. attiva il VirtualHost HTTP e riavvia Apache;
+2. esegue il `le64.exe` selezionato, passando tutti i domini, la cartella `.well-known\acme-challenge` e i percorsi di account, CSR, chiave e certificato;
+3. lascia che `le64.exe` crei il file della challenge, richieda a Let's Encrypt la verifica HTTP-01 sulla porta 80 e generi il certificato;
+4. verifica con .NET e OpenSSL il certificato prodotto, lo installa nella cartella scelta e attiva HTTPS.
+
+Anche `AggiornaCertificati.bat` richiama indirettamente lo stesso `le64.exe`, tramite il percorso salvato in `GestioneCertificati.profiles.xml`. La richiesta di rinnovo usa una soglia di 20 giorni.
+
+`le64.exe` non è incluso nel repository: deve essere già presente sul server. Il percorso proposto dall'interfaccia è `C:\server\ssl-le64\le64.exe`, ma può essere cambiato. I file di lavoro ACME e i log `gestione_*.log` e `comandi_*.log` vengono salvati nella cartella di `le64.exe`; nel log dei comandi è visibile la riga completa realmente eseguita.
+
 ## Procedura automatica
 
 1. Valida domini, cartelle, eseguibili e configurazione Apache corrente.
 2. Crea il backup di VirtualHost ed eventuali certificati precedenti.
 3. Aggiunge il VirtualHost HTTP sulla porta 80.
 4. Verifica la configurazione e riavvia l'Apache selezionato.
-5. Esegue la challenge ACME HTTP-01 dalla cartella `.well-known\acme-challenge` del sito.
+5. Avvia `le64.exe`, che esegue la challenge ACME HTTP-01 dalla cartella `.well-known\acme-challenge` del sito e richiede il certificato a Let's Encrypt.
 6. Verifica tutti i domini SAN, validità temporale e corrispondenza tra certificato e chiave.
 7. Installa certificato e chiave nella cartella selezionata.
 8. Aggiunge il VirtualHost HTTPS sulla porta 443.

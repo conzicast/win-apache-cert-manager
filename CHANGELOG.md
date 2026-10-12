@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.2 - 2026-10-12
+
+- Documentato il ruolo centrale di `le64.exe` nell'emissione e nel rinnovo dei certificati.
+- Precisati i parametri gestiti dall'applicazione, la posizione dei log e il fatto che `le64.exe` è un prerequisito esterno.
+
 ## 2.0.1 - 2026-10-11
 
 - Sostituita la verifica OpenSSL `-checkhost`, assente nelle vecchie versioni XAMPP, con lettura diretta dei nomi SAN tramite .NET.
