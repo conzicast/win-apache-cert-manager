@@ -1,0 +1,25 @@
+# Build artifacts
+build/
+bin/
+obj/
+*.pdb
+
+# Runtime state and logs
+GestioneCertificati.profiles.xml
+*.log
+*.lock
+
+# Never publish ACME accounts, keys, certificates or requests
+*.key
+*.pem
+*.crt
+*.cer
+*.csr
+*.pfx
+*.p12
+
+# IDE and operating-system files
+.vs/
+.vscode/
+Thumbs.db
+Desktop.ini
