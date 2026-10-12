@@ -75,3 +75,7 @@ La build è x64, richiede amministratore tramite manifest ed è compilata sul ru
 I file già compilati sono disponibili nella cartella `release`.
 
 L'eseguibile non è firmato digitalmente.
+
+## Licenza
+
+Il progetto è distribuito con licenza [MIT](LICENSE).
